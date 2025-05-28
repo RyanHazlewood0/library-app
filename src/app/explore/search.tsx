@@ -47,10 +47,12 @@ const Search = () => {
       {searchData.length > 0 && (
         <ul>
           {searchData.map((book) => (
-            <li key={book.id}>
-              <p>{book.title}</p>
-              <p>{book.author}</p>
-            </li>
+            <div key={book.id}>
+              <li>
+                <p>{book.title}</p>
+                <p>{book.author}</p>
+              </li>
+            </div>
           ))}
         </ul>
       )}

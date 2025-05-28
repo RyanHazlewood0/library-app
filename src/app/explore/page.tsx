@@ -1,3 +1,6 @@
+"use client";
+import Search from "./search";
+
 export default function Explore() {
-  return <>Explore page</>;
+  return <Search />;
 }
