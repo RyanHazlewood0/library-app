@@ -11,6 +11,7 @@ const Search = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchData, setSearchData] = useState<SearchedBook[]>([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
+  const [radioSelected, setRadioSelected] = useState("title");
 
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
@@ -19,12 +20,15 @@ const Search = () => {
   const fetchData = async (e) => {
     e.preventDefault();
     setLoadingSearch(true);
-    const response = await fetch(
-      `https://openlibrary.org/search.json?q=${searchValue}`
-    );
+
+    const endPoint =
+      radioSelected === "title"
+        ? `https://openlibrary.org/search.json?title=${searchValue}`
+        : `https://openlibrary.org/search.json?author=${searchValue}`;
+    const response = await fetch(endPoint);
     const data = await response.json();
 
-    const updatedData: SearchedBook[] = data.docs.slice(0, 19).map((book) => {
+    const updatedData: SearchedBook[] = data.docs.slice(0, 29).map((book) => {
       return {
         id: book.key,
         title: book.title,
@@ -38,8 +42,16 @@ const Search = () => {
     setSearchValue("");
   };
 
+  const handleRadioSelect = () => {
+    if (radioSelected === "title") {
+      setRadioSelected("author");
+    } else if (radioSelected === "author") {
+      setRadioSelected("title");
+    }
+  };
+
   return (
-    <>
+    <div className=" sm:w-[640px] sm: ml-auto sm:mr-auto">
       <form
         className="flex justify-between mb-3 sm:w-[640px] sm:ml-auto md:mr-auto"
         onSubmit={fetchData}
@@ -48,7 +60,7 @@ const Search = () => {
           <p className="pr-2 pl-2">←</p>
         </button>
         <div className="flex gap-3 justify-end w-full">
-          <div className="flex flex-col">
+          <div className="flex flex-col" onChange={handleRadioSelect}>
             <div className="flex ">
               <input
                 type="radio"
@@ -59,7 +71,7 @@ const Search = () => {
               />
               <label htmlFor="title">Title</label>
             </div>
-            <div className="flex ">
+            <div className="flex">
               <input
                 type="radio"
                 id="author"
@@ -80,9 +92,9 @@ const Search = () => {
           </button>
         </div>
       </form>
-      {loadingSearch && <p className="text-lg">Loading...</p>}
+      {loadingSearch && <p className="text-lg ml-auto mr-auto">Loading...</p>}
       {searchData.length > 0 && (
-        <ul className="flex flex-col gap-3 sm:w-[640px] sm: ml-auto sm:mr-auto">
+        <ul className="flex flex-col gap-3">
           {searchData.map((book) => (
             <Link href="/book" key={book.id}>
               <li className="border p-1 h-16 flex flex-col justify-between rounded-md w-full">
@@ -93,7 +105,7 @@ const Search = () => {
           ))}
         </ul>
       )}
-    </>
+    </div>
   );
 };
 
