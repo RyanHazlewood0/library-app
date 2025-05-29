@@ -48,6 +48,27 @@ const Search = () => {
           <p className="pr-2 pl-2">←</p>
         </button>
         <div className="flex gap-3 justify-end w-full">
+          <div className="flex flex-col">
+            <div className="flex ">
+              <input
+                type="radio"
+                id="title"
+                name="author_or_title"
+                value="title"
+                defaultChecked
+              />
+              <label htmlFor="title">Title</label>
+            </div>
+            <div className="flex ">
+              <input
+                type="radio"
+                id="author"
+                name="author_or_title"
+                value="author"
+              />
+              <label htmlFor="author">Author</label>
+            </div>
+          </div>
           <input
             placeholder="Search Title"
             value={searchValue}
