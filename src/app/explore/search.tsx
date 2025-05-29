@@ -5,6 +5,7 @@ type SearchedBook = {
   id: string;
   title: string;
   author: string;
+  cover_i: string;
 };
 
 const Search = () => {
@@ -33,6 +34,7 @@ const Search = () => {
         id: book.key,
         title: book.title,
         author: book.author_name,
+        cover_i: book.cover_edition_key,
       };
     });
     setSearchData(updatedData);
@@ -97,9 +99,17 @@ const Search = () => {
         <ul className="flex flex-col gap-3">
           {searchData.map((book) => (
             <Link href="/book" key={book.id}>
-              <li className="border p-1 h-16 flex flex-col justify-between rounded-md w-full">
-                <p className="truncate">{book.title}</p>
-                <p className="truncate">({book.author})</p>
+              <li className="border p-1 h-16 flex justify-between rounded-md w-full">
+                <div className="w-[80%]">
+                  <p className="truncate">{book.title}</p>
+                  <p className="truncate">({book.author})</p>
+                </div>
+                {book.cover_i && (
+                  <img
+                    className="w-[58px]"
+                    src={`https://covers.openlibrary.org/b/olid/${book.cover_i}-S.jpg`}
+                  />
+                )}
               </li>
             </Link>
           ))}
