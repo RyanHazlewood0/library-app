@@ -3,5 +3,5 @@ export type Book = {
   author: string;
   cover: string;
   description: string;
-  key: string;
+  id: string;
 };
