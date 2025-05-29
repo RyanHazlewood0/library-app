@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Link from "next/link";
 
 type SearchedBook = {
   id: string;
@@ -39,28 +40,35 @@ const Search = () => {
 
   return (
     <>
-      <form className="flex justify-between mb-3" onSubmit={fetchData}>
-        <input
-          placeholder="Search Title"
-          value={searchValue}
-          onChange={handleSearch}
-          className="rounded p-1 bg-[#9CA3AF] text-black"
-        />
-        <button type="submit" className="border border-white p-1 rounded">
-          Search
+      <form
+        className="flex justify-between mb-3 sm:w-[640px] sm:ml-auto md:mr-auto"
+        onSubmit={fetchData}
+      >
+        <button className="text-lg border rounded">
+          <p className="pr-2 pl-2">←</p>
         </button>
+        <div className="flex gap-3 justify-end w-full">
+          <input
+            placeholder="Search Title"
+            value={searchValue}
+            onChange={handleSearch}
+            className="rounded p-1 bg-[#9CA3AF] text-black"
+          />
+          <button type="submit" className="border border-white p-1 rounded">
+            Search
+          </button>
+        </div>
       </form>
       {loadingSearch && <p className="text-lg">Loading...</p>}
       {searchData.length > 0 && (
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-3 sm:w-[640px] sm: ml-auto sm:mr-auto">
           {searchData.map((book) => (
-            <li
-              key={book.id}
-              className="border p-1 h-16 flex flex-col justify-between rounded-md"
-            >
-              <p className="truncate">{book.title}</p>
-              <p className="truncate">({book.author})</p>
-            </li>
+            <Link href="/book" key={book.id}>
+              <li className="border p-1 h-16 flex flex-col justify-between rounded-md w-full">
+                <p className="truncate">{book.title}</p>
+                <p className="truncate">({book.author})</p>
+              </li>
+            </Link>
           ))}
         </ul>
       )}
