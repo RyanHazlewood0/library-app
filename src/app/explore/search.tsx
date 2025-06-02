@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Link from "next/link";
+import BookModal from "./bookModal";
 
-type SearchedBook = {
+export type SearchedBook = {
   id: string;
   title: string;
   author: string;
@@ -13,6 +13,7 @@ const Search = () => {
   const [searchData, setSearchData] = useState<SearchedBook[]>([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [radioSelected, setRadioSelected] = useState("title");
+  const [selectedBook, setSelectedBook] = useState<SearchedBook | null>(null);
 
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
@@ -50,6 +51,10 @@ const Search = () => {
     } else if (radioSelected === "author") {
       setRadioSelected("title");
     }
+  };
+
+  const selectBook = (book: SearchedBook) => {
+    setSelectedBook(book);
   };
 
   return (
@@ -98,8 +103,8 @@ const Search = () => {
       {searchData.length > 0 && (
         <ul className="flex flex-col gap-3">
           {searchData.map((book) => (
-            <Link href={`/book/${book.id}`} key={book.id}>
-              <li className="border p-1 h-16 flex justify-between rounded-md w-full">
+            <div key={book.id} onClickCapture={() => selectBook(book)}>
+              <li className="border p-1 h-16 flex justify-between rounded-md w-full cursor-pointer">
                 <div className="w-[80%]">
                   <p className="truncate">{book.title}</p>
                   <p className="truncate">({book.author})</p>
@@ -111,9 +116,15 @@ const Search = () => {
                   />
                 )}
               </li>
-            </Link>
+            </div>
           ))}
         </ul>
+      )}
+      {selectedBook && (
+        <BookModal
+          selectedBook={selectedBook}
+          setSelectedBook={setSelectedBook}
+        />
       )}
     </div>
   );
