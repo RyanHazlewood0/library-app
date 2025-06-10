@@ -33,7 +33,9 @@ const Search = () => {
       return {
         id: book.key.split("s/")[1],
         title: book.title,
-        author: book.author_name[0],
+        author: book.author_name?.[0]
+          ? book.author_name[0]
+          : "Author name not available",
         cover_i: book.cover_edition_key,
       };
     });

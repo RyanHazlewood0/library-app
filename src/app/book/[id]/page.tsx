@@ -1,11 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 type BookType = {
   title: string;
   cover: number;
   author: number;
+  description: string;
 };
 
 const Book = () => {
@@ -18,10 +20,17 @@ const Book = () => {
     const fetchBook = async () => {
       const response = await fetch(`https://openlibrary.org/works/${id}.json`);
       const data = await response.json();
+
+      const description =
+        typeof data.description === "string"
+          ? data.description
+          : data.description?.value || "No summary available..";
+
       const book = {
         title: data.title,
         cover: data.covers[0],
         author: data.authors[0].author.key.split("s/")[1],
+        description: description,
       };
       setThisBook(book);
     };
@@ -43,19 +52,26 @@ const Book = () => {
   }, [thisBook]);
 
   return (
-    <div className=" fixed inset-0 z-50 flex flex-col items-center gap-5 bg-black p-3 sm:w-[640px] sm: ml-auto sm:mr-auto">
+    <div className=" fixed inset-0 z-50 flex flex-col items-center gap-5 bg-black p-3 sm:w-[640px] sm: ml-auto sm:mr-auto overflow-auto">
       {thisBook && (
         <>
+          <Link href={`/explore`}>
+            <button className="text-lg border rounded">
+              <p className="pr-2 pl-2 mr-auto">←</p>
+            </button>
+          </Link>
           <img
             src={`https://covers.openlibrary.org/b/id/${thisBook.cover}-L.jpg`}
             className=" pl-20 pr-20 pb-auto"
           />
           <div className="flex flex-col gap-3 text-center w-full">
             <h1 className="text-2xl font-bold">{thisBook?.title}</h1>
+
             <h2 className="text-lg font-semibold">{thisAuthor}</h2>
+
             <hr className="border-t border-gray-300 w-full" />
             <h3 className="text-xl font-semibold">Overview</h3>
-            <p>summary</p>
+            <p>{thisBook.description}</p>
           </div>
         </>
       )}
