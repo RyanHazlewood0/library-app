@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-type SearchedBook = {
+export type SearchedBook = {
   id: string;
   title: string;
   author: string;
@@ -31,9 +31,11 @@ const Search = () => {
 
     const updatedData: SearchedBook[] = data.docs.slice(0, 29).map((book) => {
       return {
-        id: book.key,
+        id: book.key.split("s/")[1],
         title: book.title,
-        author: book.author_name,
+        author: book.author_name?.[0]
+          ? book.author_name[0]
+          : "Author name not available",
         cover_i: book.cover_edition_key,
       };
     });
@@ -98,8 +100,8 @@ const Search = () => {
       {searchData.length > 0 && (
         <ul className="flex flex-col gap-3">
           {searchData.map((book) => (
-            <Link href="/book" key={book.id}>
-              <li className="border p-1 h-16 flex justify-between rounded-md w-full">
+            <Link key={book.id} href={`/book/${book.id}`}>
+              <li className="border p-1 h-16 flex justify-between rounded-md w-full cursor-pointer">
                 <div className="w-[80%]">
                   <p className="truncate">{book.title}</p>
                   <p className="truncate">({book.author})</p>

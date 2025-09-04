@@ -1,43 +1,38 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  SetStateAction,
-  Dispatch,
-} from "react";
+"use client";
+import { createContext, useContext } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
+import { BookType } from "../../types";
 
-import { Book } from "../../types";
-
-type LibraryContextType = {
-  myCollection: Book[];
-  setMyCollection: Dispatch<SetStateAction<Book[]>>;
+type BookContextType = {
+  collection: BookType[];
+  setCollection: Dispatch<SetStateAction<BookType[]>>;
 };
 
-type useLibraryContextProps = {
-  children: React.ReactNode;
-};
+const BookContext = createContext<BookContextType | null>(null);
 
-const LibraryContext = createContext<LibraryContextType | null>(null);
-
-export const useLibraryContext = (): LibraryContextType => {
-  const value = useContext(LibraryContext);
-  if (!value) {
-    throw new Error("useLibraryContext must be used within LibraryProvider");
+export const useBookContext = (): BookContextType => {
+  const value = useContext(BookContext);
+  if (value === null) {
+    throw new Error("useBookContext must be used within a BookProvider");
   }
   return value;
 };
 
-export const LibraryProvider = ({ children }: useLibraryContextProps) => {
-  const [myCollection, setMyCollection] = useState<Book[]>([]);
+type useBookContextProps = {
+  children: React.ReactNode;
+};
+
+export const BookProvider = ({ children }: useBookContextProps) => {
+  const [collection, setCollection] = useState<BookType[]>([]);
 
   return (
-    <LibraryContext.Provider
+    <BookContext.Provider
       value={{
-        myCollection,
-        setMyCollection,
+        collection,
+        setCollection,
       }}
     >
       {children}
-    </LibraryContext.Provider>
+    </BookContext.Provider>
   );
 };
