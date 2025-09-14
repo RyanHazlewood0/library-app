@@ -2,7 +2,10 @@
 import { useBookContext } from "../globalContext";
 
 export default function Collection() {
-  const { collection } = useBookContext();
+  const { collection, setCollection } = useBookContext();
+
+  console.log(collection);
+
   return (
     <div className="flex flex-col items-center p-4">
       <ul className="flex flex-col gap-4">
